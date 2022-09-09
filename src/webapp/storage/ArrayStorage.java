@@ -4,8 +4,9 @@ import webapp.model.Resume;
 
 import java.util.Arrays;
 
-public class ArrayStorage {
-    private final Resume[] storage = new Resume[10000];
+public class ArrayStorage implements Storage {
+    private static final int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
     public void update(Resume resume) {
@@ -24,7 +25,7 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (storage.length <= size) {
+        if (STORAGE_LIMIT <= size) {
             System.out.println("save: no space in array");
         } else if (getIndex(r.getUuid()) != -1) {
             System.out.println("save. resume already exists: " + r.getUuid());
