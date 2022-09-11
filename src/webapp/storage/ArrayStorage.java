@@ -4,24 +4,20 @@ import webapp.model.Resume;
 
 import java.util.Arrays;
 
-public class ArrayStorage implements Storage {
-    private static final int STORAGE_LIMIT = 10000;
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
-    private int size = 0;
+public class ArrayStorage extends AbstractArrayStorage {
+
+    public void clear() {
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
+    }
 
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
-
         if (index == -1) {
             System.out.println("update: no such element: " + resume.getUuid());
         } else {
             storage[index] = resume;
         }
-    }
-
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
     }
 
     public void save(Resume r) {
@@ -33,16 +29,6 @@ public class ArrayStorage implements Storage {
             storage[size] = r;
             size++;
         }
-    }
-
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index == -1) {
-            System.out.println("get: no such element: " + uuid);
-            return null;
-        }
-        return storage[index];
     }
 
     public void delete(String uuid) {
@@ -60,9 +46,6 @@ public class ArrayStorage implements Storage {
         return Arrays.copyOf(storage, size);
     }
 
-    public int size() {
-        return size;
-    }
 
     protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
