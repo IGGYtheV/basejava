@@ -4,30 +4,21 @@ import webapp.model.Resume;
 
 import java.util.Arrays;
 
-public class SortedArrayStorage extends AbstractArrayStorage{
-    @Override
-    public void clear() {
+public class SortedArrayStorage extends AbstractArrayStorage {
 
+    @Override
+    public void insertElement(Resume r, int index) {
+        int insertIndex = Math.abs(index) - 1;
+        System.arraycopy(storage, insertIndex, storage, insertIndex + 1, size - index - 1);
+        storage[insertIndex] = r;
     }
 
     @Override
-    public void update(Resume r) {
-
-    }
-
-    @Override
-    public void save(Resume r) {
-
-    }
-
-    @Override
-    public void delete(String uuid) {
-
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return new Resume[0];
+    protected void fillDeletedElement(int index) {
+        int numMoved = size - index;
+        if (numMoved > 0) {
+            System.arraycopy(storage, index + 1, storage, index, numMoved);
+        }
     }
 
     @Override
