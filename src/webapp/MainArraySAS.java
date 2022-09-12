@@ -38,13 +38,11 @@ public class MainArraySAS {
                     break;
                 case "save":
                     r = new Resume();
-                    r.setUuid(uuid);
                     STORAGE.save(r);
                     printAll();
                     break;
                 case "update":
                     r = new Resume();
-                    r.setUuid(uuid);
                     STORAGE.update(r);
                     printAll();
                     break;
