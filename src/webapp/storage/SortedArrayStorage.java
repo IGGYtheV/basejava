@@ -7,10 +7,11 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void insertElement(Resume r, int index) {
-        int insertIndex = Math.abs(index) - 1;
-        System.arraycopy(storage, insertIndex, storage, insertIndex + 1, size - index - 1);
-        storage[insertIndex] = r;
+    protected void insertElement(Resume r, int index) {
+//      http://codereview.stackexchange.com/questions/36221/binary-search-for-inserting-in-array#answer-36239
+        int insertIdx = -index - 1;
+        System.arraycopy(storage, insertIdx, storage, insertIdx + 1, size - insertIdx);
+        storage[insertIdx] = r;
     }
 
     @Override

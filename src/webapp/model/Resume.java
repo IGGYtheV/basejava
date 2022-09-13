@@ -2,9 +2,6 @@ package webapp.model;
 
 import java.util.UUID;
 
-/**
- * Initial resume class
- */
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
@@ -18,7 +15,9 @@ public class Resume implements Comparable<Resume> {
         this.uuid = uuid;
     }
 
-    public String getUuid() { return uuid; }
+    public String getUuid() {
+        return uuid;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -26,13 +25,15 @@ public class Resume implements Comparable<Resume> {
         if (o == null || getClass() != o.getClass()) return false;
 
         Resume resume = (Resume) o;
-        return getUuid().equals(resume.getUuid());
+
+        return uuid.equals(resume.uuid);
     }
 
     @Override
     public int hashCode() {
         return uuid.hashCode();
     }
+
     @Override
     public String toString() {
         return uuid;
