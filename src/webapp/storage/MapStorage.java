@@ -15,23 +15,11 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public int size() {
-        return storage.size();
-    }
-
-    @Override
     public void update(Resume r) {
         Resume o = storage.replace(r.getUuid(), r);
         if (o == null) {
             throw new NotExistStorageException(r.getUuid());
         }
-
-
-//        if (!storage.containsKey(resume.getUuid())) {
-//            throw new NotExistStorageException(resume.getUuid());
-//        } else {
-//            storage.replace(resume.getUuid(), resume);
-//        }
     }
 
     @Override
@@ -40,14 +28,6 @@ public class MapStorage extends AbstractStorage {
             throw new ExistStorageException(r.getUuid());
         } else {
             storage.put(r.getUuid(), r);
-        }
-    }
-
-    @Override
-    public void delete(String uuid) {
-        Resume o = storage.remove(uuid);
-        if (o == null) {
-            throw new NotExistStorageException(uuid);
         }
     }
 
@@ -62,9 +42,33 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
+    public void delete(String uuid) {
+        Resume o = storage.remove(uuid);
+        if (o == null) {
+            throw new NotExistStorageException(uuid);
+        }
+    }
+
+    @Override
     public Resume[] getAll() {
         return storage.values().toArray(new Resume[storage.size()]);
     }
+
+    @Override
+    public int size() {
+        return storage.size();
+    }
+
+    @Override
+    protected int getIndex(String uuid) {return 0;}
+    @Override
+    protected void replaceUpdatedElement(Resume r, int index) {}
+    @Override
+    protected void saveInArrayOrList(int index, Resume r) {}
+    @Override
+    protected Resume getFromArrayOrList(int index) {return null;}
+    @Override
+    protected void deleteFromArrayOrList(int index) {}
 }
 
 

@@ -1,7 +1,5 @@
 package webapp.storage;
 
-import webapp.exception.ExistStorageException;
-import webapp.exception.NotExistStorageException;
 import webapp.exception.StorageException;
 import webapp.model.Resume;
 
@@ -12,27 +10,21 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     final Resume[] storage = new Resume[STORAGE_LIMIT];
     int size = 0;
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-        }
+    protected void replaceUpdatedElement(Resume r, int index) {
+        storage[index] = r;
     }
 
-    public void save(Resume r) {
-        int index = getIndex(r.getUuid());
+    @Override
+    protected void saveInArrayOrList(int index, Resume r) {
         if (STORAGE_LIMIT <= size) {
             throw new StorageException("Storage overflow", r.getUuid());
-        } else if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
         } else {
             insertElement(r, index);
             size++;
@@ -41,35 +33,26 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void insertElement(Resume r, int index);
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            size--;
-            fillDeletedElement(index);
-            storage[size] = null;
-        }
-    }
 
-    protected abstract void fillDeletedElement(int index);
-
-    public int size() {
-        return size;
-    }
-
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
+    @Override
+    protected Resume getFromArrayOrList(int index) {
         return storage[index];
     }
 
-    protected abstract int getIndex(String uuid);
+    @Override
+    protected void deleteFromArrayOrList(int index) {
+        size--;
+        fillDeletedElement(index);
+        storage[size] = null;
+    }
+    protected abstract void fillDeletedElement(int index);
 
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
+    }
+
+    public int size() {
+        return size;
     }
 }
