@@ -2,19 +2,18 @@ package webapp.storage;
 
 import webapp.exception.ExistStorageException;
 import webapp.exception.NotExistStorageException;
-import webapp.exception.StorageException;
 import webapp.model.Resume;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
-    protected static final int STORAGE_LIMIT = 10000;
-    final Resume[] storage = new Resume[STORAGE_LIMIT];
-    int size = 0;
+public class ListStorage extends AbstractStorage {
+    List<Resume> storage = new ArrayList<>();
 
+    @Override
     public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
+        storage.removeAll(storage);
     }
 
     @Override
@@ -23,53 +22,51 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         if (index < 0) {
             throw new NotExistStorageException(resume.getUuid());
         } else {
-            storage[index] = resume;
+            storage.set(index, resume);
         }
     }
-
+    @Override
     public void save(Resume r) {
         int index = getIndex(r.getUuid());
-        if (STORAGE_LIMIT <= size) {
-            throw new StorageException("Storage overflow", r.getUuid());
-        } else if (index >= 0) {
+        if (index >= 0) {
             throw new ExistStorageException(r.getUuid());
         } else {
-            insertElement(r, index);
-            size++;
+            storage.add(-index - 1, r);
         }
     }
-
-    protected abstract void insertElement(Resume r, int index);
-
+    @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         } else {
-            size--;
-            fillDeletedElement(index);
-            storage[size] = null;
+            storage.remove(index);
         }
     }
-
-    protected abstract void fillDeletedElement(int index);
-
-    public int size() {
-        return size;
-    }
-
+    @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
 
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
-        return storage[index];
+        return storage.get(index);
     }
 
-    protected abstract int getIndex(String uuid);
+    @Override
+    public int size() {
+        return storage.size();
+    }
 
+    @Override
     public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+        return storage.toArray(new Resume[storage.size()]);
+    }
+
+    protected int getIndex(String uuid) {
+        Resume searchKey = new Resume(uuid);
+        return Collections.binarySearch(storage, searchKey);
     }
 }
+
+
