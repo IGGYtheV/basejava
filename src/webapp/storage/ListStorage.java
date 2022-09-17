@@ -6,48 +6,49 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
-    List<Resume> storage = new ArrayList<>();
+public class ListStorage extends AbstractStorage  {
+    List<Resume> list = new ArrayList<>();
 
     @Override
     public void clear() {
-        storage.removeAll(storage);
+        list.clear();
+    }
+
+
+    @Override
+    protected void replaceUpdatedElement(Resume r, Object index) {
+        list.set((Integer) index, r);
     }
 
     @Override
-    protected void replaceUpdatedElement(Resume r, int index) {
-        storage.set(index, r);
+    protected void saveInArrayOrList(Object index, Resume r) {
+        list.add(-(Integer)index - 1, r);
     }
 
     @Override
-    protected void saveInArrayOrList(int index, Resume r) {
-        storage.add(-index - 1, r);
+    protected Resume getFromArrayOrList(Object index) {
+        return list.get((Integer) index);
     }
 
     @Override
-    protected Resume getFromArrayOrList(int index) {
-        return storage.get(index);
-    }
-
-    @Override
-    protected void deleteFromArrayOrList(int index) {
-        storage.remove(index);
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[storage.size()]);
+    protected void deleteFromArrayOrList(Object index) {
+        list.remove(((Integer) index).intValue());
     }
 
     @Override
     public int size() {
-        return storage.size();
+        return list.size();
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        return Collections.binarySearch(storage, searchKey);
+    protected Integer getSearchKey(String uuid) {
+        Resume searchKey = new Resume(uuid, "NewName");
+        return Collections.binarySearch(list, searchKey, RESUME_COMPARATOR);
+    }
+
+    @Override
+    protected List<Resume> doCopyAll() {
+        return list;
     }
 }
 

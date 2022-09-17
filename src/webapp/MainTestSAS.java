@@ -1,11 +1,14 @@
+/*
 package webapp;
 
 import webapp.model.Resume;
 import webapp.storage.SortedArrayStorage;
 
+*/
 /**
  * Test for your webapp.storage.ArrayStorage implementation
- */
+ *//*
+
 public class MainTestSAS {
     static final SortedArrayStorage SORTED_ARRAY_STORAGE = new SortedArrayStorage();
 
@@ -54,3 +57,4 @@ public class MainTestSAS {
         }
     }
 }
+*/

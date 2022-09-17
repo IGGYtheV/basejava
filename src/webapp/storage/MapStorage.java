@@ -1,74 +1,75 @@
 package webapp.storage;
 
-import webapp.exception.ExistStorageException;
 import webapp.exception.NotExistStorageException;
 import webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
-    Map<String, Resume> storage = new HashMap<>();
+    Map<String, Resume> map = new HashMap<>();
 
     @Override
     public void clear() {
-        storage.clear();
+        map.clear();
     }
 
     @Override
-    public void update(Resume r) {
-        Resume o = storage.replace(r.getUuid(), r);
-        if (o == null) {
-            throw new NotExistStorageException(r.getUuid());
-        }
+    protected void replaceUpdatedElement(Resume r, Object uuid) {
+        map.put((String) uuid, r);
     }
 
     @Override
-    public void save(Resume r) {
-        if (storage.containsKey(r.getUuid())) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            storage.put(r.getUuid(), r);
-        }
+    protected void saveInArrayOrList(Object uuid, Resume r) {
+        map.put((String) uuid, r);
     }
 
-    @Override
-    public Resume get(String uuid) {
-        Resume o = storage.get(uuid);
-        if (o == null) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            return o;
-        }
-    }
 
     @Override
     public void delete(String uuid) {
-        Resume o = storage.remove(uuid);
+        Resume o = map.remove(uuid);
         if (o == null) {
             throw new NotExistStorageException(uuid);
         }
     }
 
-    @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(new Resume[storage.size()]);
-    }
+//    @Override
+//    public List<Resume> getAllSorted() {
+//        return null;
+//    }
 
     @Override
     public int size() {
-        return storage.size();
+        return map.size();
+    }
+
+
+    @Override
+    protected boolean isExist(Object uuid) {
+        return map.containsKey((String) uuid);
+
     }
 
     @Override
-    protected int getIndex(String uuid) {return 0;}
+    protected Object getSearchKey(String uuid) {
+        return uuid;
+    }
+
     @Override
-    protected void replaceUpdatedElement(Resume r, int index) {}
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(map.values());    }
+
     @Override
-    protected void saveInArrayOrList(int index, Resume r) {}
+    protected Resume getFromArrayOrList(Object uuid) {
+        return map.get((String) uuid);
+    }
+
     @Override
-    protected Resume getFromArrayOrList(int index) {return null;}
-    @Override
-    protected void deleteFromArrayOrList(int index) {}
+    protected void deleteFromArrayOrList(Object uuid) {
+        map.remove((String) uuid);
+    }
 }
 
 

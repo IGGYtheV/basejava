@@ -4,62 +4,71 @@ import webapp.exception.ExistStorageException;
 import webapp.exception.NotExistStorageException;
 import webapp.model.Resume;
 
-public abstract class AbstractStorage  implements Storage {
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
-//    @Override
-//    public void clear() {
-//    }
+public abstract class AbstractStorage  implements Storage {
+    protected final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
+
+    protected abstract Object getSearchKey(String uuid);
+    protected abstract List<Resume> doCopyAll();
 
     @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            replaceUpdatedElement(resume, index);
-        }
+        Object searchKey = getExistedSearchKey(resume.getUuid());
+        replaceUpdatedElement(resume, searchKey);
     }
-    protected abstract void replaceUpdatedElement (Resume r, int index);
+    protected abstract void replaceUpdatedElement (Resume r, Object searchKey);
 
     @Override
     public void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            saveInArrayOrList(index, r);
-        }
+        Object searchKey = getNotExistedSearchKey(r.getUuid());
+        saveInArrayOrList(searchKey, r);
     }
-    protected abstract void saveInArrayOrList(int index, Resume r);
+    protected abstract void saveInArrayOrList(Object searchKey, Resume r);
 
     @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getFromArrayOrList(index);
+        Object searchKey = getExistedSearchKey(uuid);
+        return getFromArrayOrList(searchKey);
     }
-    protected abstract Resume getFromArrayOrList(int index);
+    protected abstract Resume getFromArrayOrList(Object searchKey);
 
     @Override
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            deleteFromArrayOrList(index);
-        }
+        Object searchKey = getExistedSearchKey(uuid);
+        deleteFromArrayOrList(searchKey);
     }
-    protected abstract void deleteFromArrayOrList(int index);
+    protected abstract void deleteFromArrayOrList(Object searchKey);
 
-//    @Override
-//    public Resume[] getAll() {return null;}
-//
-//    @Override
-//    public int size() {
-//        return 0;
-//    }
 
-    protected abstract int getIndex(String uuid);
+
+    private Object getExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return searchKey;
+    }
+
+    private Object getNotExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
+    }
+
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> list = doCopyAll();
+        Collections.sort(list);
+        return list;
+    }
 }
+

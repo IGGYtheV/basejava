@@ -1,11 +1,17 @@
+package webapp;/*
 package webapp;
 
 import webapp.model.Resume;
 import webapp.storage.ArrayStorage;
 
+*/
 /**
  * Test for your webapp.storage.ArrayStorage implementation
  */
+
+import webapp.model.Resume;
+import webapp.storage.ArrayStorage;
+
 public class MainTestArrayStorage {
     static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
@@ -34,7 +40,7 @@ public class MainTestArrayStorage {
 
     static void printAll() {
         System.out.println("\nGet All");
-        for (Resume r : ARRAY_STORAGE.getAll()) {
+        for (Resume r : ARRAY_STORAGE.getAllSorted()) {
             System.out.println(r);
         }
     }
