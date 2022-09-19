@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
+public class MapStorage extends AbstractStorage<String> {
     Map<String, Resume> map = new HashMap<>();
 
     @Override
@@ -17,13 +17,13 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void replaceUpdatedElement(Resume r, Object uuid) {
-        map.put((String) uuid, r);
+    protected void doUpdate(Resume r, String uuid) {
+        map.put(uuid, r);
     }
 
     @Override
-    protected void saveInArrayOrList(Object uuid, Resume r) {
-        map.put((String) uuid, r);
+    protected void doSave(String uuid, Resume r) {
+        map.put(uuid, r);
     }
 
 
@@ -35,11 +35,6 @@ public class MapStorage extends AbstractStorage {
         }
     }
 
-//    @Override
-//    public List<Resume> getAllSorted() {
-//        return null;
-//    }
-
     @Override
     public int size() {
         return map.size();
@@ -47,13 +42,13 @@ public class MapStorage extends AbstractStorage {
 
 
     @Override
-    protected boolean isExist(Object uuid) {
-        return map.containsKey((String) uuid);
+    protected boolean isExist(String uuid) {
+        return map.containsKey(uuid);
 
     }
 
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 
@@ -62,13 +57,13 @@ public class MapStorage extends AbstractStorage {
         return new ArrayList<>(map.values());    }
 
     @Override
-    protected Resume getFromArrayOrList(Object uuid) {
-        return map.get((String) uuid);
+    protected Resume doGet(String uuid) {
+        return map.get(uuid);
     }
 
     @Override
-    protected void deleteFromArrayOrList(Object uuid) {
-        map.remove((String) uuid);
+    protected void doDelete(String uuid) {
+        map.remove(uuid);
     }
 }
 

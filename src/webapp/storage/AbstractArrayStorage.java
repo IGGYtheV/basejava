@@ -5,7 +5,7 @@ import webapp.model.Resume;
 
 import java.util.*;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
 
     protected static final int STORAGE_LIMIT = 10000;
@@ -21,16 +21,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void replaceUpdatedElement(Resume r, Object index) {
-        storage[(Integer) index] = r;
+    protected void doUpdate(Resume r, Integer index) {
+        storage[index] = r;
     }
 
     @Override
-    protected void saveInArrayOrList(Object index, Resume r) {
+    protected void doSave(Integer index, Resume r) {
         if (STORAGE_LIMIT <= size) {
             throw new StorageException("Storage overflow", r.getUuid());
         } else {
-            insertElement(r, (Integer) index);
+            insertElement(r, index);
             size++;
         }
     }
@@ -39,14 +39,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
 
     @Override
-    protected Resume getFromArrayOrList(Object index) {
-        return storage[(Integer) index];
+    protected Resume doGet(Integer index) {
+        return storage[index];
     }
 
     @Override
-    protected void deleteFromArrayOrList(Object index) {
+    protected void doDelete(Integer index) {
         size--;
-        fillDeletedElement((Integer) index);
+        fillDeletedElement(index);
         storage[size] = null;
     }
     protected abstract void fillDeletedElement(int index);
