@@ -30,20 +30,20 @@ public class MainFile {
 //            throw new RuntimeException(e);
 //        }
         File direct = new File("C:\\Users\\User\\IdeaProjects\\basejava\\src");
-        recursivePrint(direct);
+        recursivePrint(direct, "");
 //        System.out.println(direct.isDirectory());
 
     }
 
-    public static void recursivePrint(File directory) {
+    public static void recursivePrint(File directory, String offset) {
         if (directory.isDirectory()) {
-            System.out.println("\ndirectory name: " + directory);
+            System.out.println("directory name: " + directory);
             File[] subDirectories = directory.listFiles();
             for (File file : Objects.requireNonNull(subDirectories)) {
-                recursivePrint(file);
+                recursivePrint(file, offset + "  ");
             }
         } else {
-            System.out.println("filename: " + directory.getName());
+            System.out.println(offset + "filename: " + directory.getName());
         }
 
     }

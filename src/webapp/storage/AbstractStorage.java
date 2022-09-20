@@ -12,7 +12,9 @@ import java.util.logging.Logger;
 public abstract class AbstractStorage<SK>  implements Storage {
 //    protected final Logger log = Logger.getLogger(getClass().getName());
     private static final Logger LOG= Logger.getLogger(AbstractStorage.class.getName());
-    protected final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
+    protected final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getUuid);
+
+
 
     protected abstract SK getSearchKey(String uuid);
     protected abstract List<Resume> doCopyAll();

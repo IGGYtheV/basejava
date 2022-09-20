@@ -1,29 +1,27 @@
-package webapp.storage;
+package webapp.storage.serialiser;
 
 import webapp.exception.StorageException;
 import webapp.model.Resume;
 
 import java.io.*;
-import java.nio.file.Path;
 
-public class ObjectStreamPathStorage extends AbstractPathStorage {
+public class ObjectStreamSerialiser implements StreamSerialiser {
 
-    protected ObjectStreamPathStorage(Path directory) {
-        super(directory.toString());
-    }
 
     @Override
-    public void doWrite(Resume r, OutputStream os) throws IOException {
+    public void doWrite(Resume r, OutputStream os) {
         try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
             oos.writeObject(r);
+        } catch (IOException e) {
+            throw new StorageException("Error write resume", r.getUuid(), e);
         }
     }
 
     @Override
-    protected Resume doRead(InputStream is) throws IOException {
+    public Resume doRead(InputStream is) {
         try (ObjectInputStream ois = new ObjectInputStream(is)) {
             return (Resume) ois.readObject();
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | IOException e) {
             throw new StorageException("Error read resume", null, e);
         }
     }
