@@ -14,6 +14,7 @@ public class ResumeTestData {
     public  static void resumeFiller() {
         AbstractStorageTest.R1.addContact(ContactType.MAIL, "mail1@ya.ru");
         AbstractStorageTest.R1.addContact(ContactType.PHONE, "11111");
+
         AbstractStorageTest.R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
         AbstractStorageTest.R1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
         AbstractStorageTest.R1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivment11", "Achivment12", "Achivment13"));
