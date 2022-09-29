@@ -2,7 +2,7 @@ package webapp.storage;
 
 import webapp.model.Resume;
 
-import java.util.*;
+import java.util.Arrays;
 
 
 public class SortedArrayStorage extends AbstractArrayStorage {
