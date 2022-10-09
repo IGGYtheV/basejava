@@ -19,6 +19,8 @@ import static webapp.util.DateUtil.of;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organisation implements Serializable {
     private static final long serialVersionUID = 1L;
+    public static final Organisation EMPTY = new Organisation("", "", Position.EMPTY);
+
 
     private Link homePage;
     private List<Position> positions = new ArrayList<>();
@@ -68,6 +70,7 @@ public class Organisation implements Serializable {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
+        public static final Position EMPTY = new Position();
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
